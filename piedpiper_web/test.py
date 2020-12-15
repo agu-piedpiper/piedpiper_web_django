@@ -38,7 +38,7 @@ class Image():
     
         return note_body
 
-body='''<img src="https://d2l930y2yx77uc.cloudfront.net/production/uploads/images/12665384/picture_pc_ed8308a5ad3efe049456c8bd867f4267.png"aaasrc="https://d2l930y2yx77uc.cloudfront.net/production/uploads/images/14452201/picture_pc_d77aeaa4285b7c3beb0183af5995faee.jpg"'''
-body=body.replace('\n' , '' )
-note_body=Image.rewriting_img_path(body,2)
-print(note_body)
+# body='''<img src="https://d2l930y2yx77uc.cloudfront.net/production/uploads/images/12665384/picture_pc_ed8308a5ad3efe049456c8bd867f4267.png"aaasrc="https://d2l930y2yx77uc.cloudfront.net/production/uploads/images/14452201/picture_pc_d77aeaa4285b7c3beb0183af5995faee.jpg"'''
+# body=body.replace('\n' , '' )
+# note_body=Image.rewriting_img_path(body,2)
+# print(note_body)
