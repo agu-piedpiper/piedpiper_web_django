@@ -64,10 +64,17 @@ class Image():
             if img_extension == 'jpeg':
                 img_extension = 'jpg'
             image_name = f'{id}_{index}'
-            
+        
             dst_path=f'./media/images/{image_name}.{img_extension}'
             Image.download_img(img_url,dst_path)
             note_body = note_body.replace(img_url,dst_path)
             word_len_diff += len(img_url)-len(dst_path)
     
         return note_body
+
+    def rename_eyecatch(dl_img_path,new_path):
+        # https://assets.st-note.com/production/uploads/images/12066309/rectangle_large_type_2_3f83616f0ad914bbf0d5ce0411fa478c.jpeg?fit=bounds&quality=60&width=1280
+        dl_img_path=dl_img_path.split(",")
+        Image.download_img(dl_img_path,new_path)
+    
+        return new_path

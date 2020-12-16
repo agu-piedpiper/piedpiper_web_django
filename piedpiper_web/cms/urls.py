@@ -2,9 +2,9 @@ from django.urls import path
 from . import views
 app_name = 'cms'
 urlpatterns = [
-    path('article/', views.article_list, name='article_list'),   # 一覧
-    path('article/add/', views.article_edit, name='article_add'),  # 登録
-    path('article/note_add/', views.note_add, name='note_add'),  # 追加
-    path('article/mod/<int:article_id>/', views.article_edit, name='article_mod'),  # 修正
-    path('article/del/<int:article_id>/', views.article_del, name='article_del'),   # 削除
+    path('activiy/', views.activiy_list, name='activiy_list'),   # 一覧
+    path('activiy/add/', views.activiy_edit, name='activiy_add'),  # 登録
+    path('activiy/note_add/', views.note_add, name='note_add'),  # 追加
+    path('activiy/mod/<int:activiy_id>/', views.activiy_edit, name='activiy_mod'),  # 修正
+    path('activiy/del/<int:activiy_id>/', views.activiy_del, name='activiy_del'),   # 削除
 ]

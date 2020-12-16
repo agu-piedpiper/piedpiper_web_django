@@ -2,7 +2,7 @@
 import requests
 import json
 import pandas as pd
-import re,urllib
+import re,urllib,os
 
 class Image():
     
@@ -15,7 +15,7 @@ class Image():
 
     def get_img_position(note_body):
         first_find_words = 'https://d2l930y2yx77uc.cloudfront.net/production/uploads/images/'
-        end_find_words = '(.png|.jpg)'
+        end_find_words = '(.png|.jpg|.jpeg)'
         find_words=f'{first_find_words}.*?{end_find_words}'
         img_positon = [m.span() for m in re.finditer(find_words, note_body)]
         # [(2, 4), (6, 8)]
@@ -42,3 +42,25 @@ class Image():
 # body=body.replace('\n' , '' )
 # note_body=Image.rewriting_img_path(body,2)
 # print(note_body)
+
+
+def rename_eyecatch(dl_img_path,activity_id):
+        
+        dl_img_path=dl_img_path.split("?")[0]
+        extension = os.path.splitext(dl_img_path)[1]
+        image_name='eyecatch'
+
+        if extension ==".jpeg":
+            extension = ".jpg"
+        dst_path=f'./media/images/eyecatch_activity_{activity_id}{extension}'
+        print('==============')
+        print(dl_img_path)
+        print(dst_path)
+        print('==============')
+        Image.download_img(dl_img_path,dst_path)
+        
+
+        return dst_path
+dl_img_path='https://assets.st-note.com/production/uploads/images/12066309/rectangle_large_type_2_3f83616f0ad914bbf0d5ce0411fa478c.jpeg?fit=bounds&quality=60&width=1280'
+activity_id=1
+print(rename_eyecatch(dl_img_path,activity_id))
