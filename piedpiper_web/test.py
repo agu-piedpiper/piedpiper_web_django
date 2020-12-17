@@ -53,14 +53,11 @@ def rename_eyecatch(dl_img_path,activity_id):
         if extension ==".jpeg":
             extension = ".jpg"
         dst_path=f'./media/images/eyecatch_activity_{activity_id}{extension}'
-        print('==============')
-        print(dl_img_path)
-        print(dst_path)
-        print('==============')
+       
         Image.download_img(dl_img_path,dst_path)
-        
+        eyecatch_img_path = dst_path[8:]
 
-        return dst_path
+        return eyecatch_img_path
 dl_img_path='https://assets.st-note.com/production/uploads/images/12066309/rectangle_large_type_2_3f83616f0ad914bbf0d5ce0411fa478c.jpeg?fit=bounds&quality=60&width=1280'
 activity_id=1
 print(rename_eyecatch(dl_img_path,activity_id))

@@ -1,0 +1,22 @@
+{% extends "cms/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}記事の編集{% endblock title %}
+
+{% block content %}
+    <h4 class="mt-4 mb-5 border-bottom">記事の編集</h4>
+    {% if techblog_id %}
+    <form action="{% url 'cms:techblog_mod' techblog_id=techblog_id %}" method="post" enctype="multipart/form-data">
+    {% else %}
+    <form action="{% url 'cms:techblog_add' %}" method="post" enctype="multipart/form-data">
+    {% endif %}
+      {% csrf_token %}
+      {% bootstrap_form form layout='horizontal' %}
+      <div class="form-group row">
+        <div class="offset-md-3 col-md-9">
+          <button type="submit" class="btn btn-primary">送信</button>
+        </div>
+      </div>
+    </form>
+    <a href="{% url 'cms:techblog_list' %}" class="btn btn-secondary btn-sm">戻る</a>
+{% endblock content %}
