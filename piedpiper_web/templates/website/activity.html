@@ -1,0 +1,27 @@
+{% extends "website/base.html" %}
+{% block content %}
+{% load static %}
+<div class="note-bg">
+    <div class="note-list p-lg-5">
+        <h1 class="note-list-heading mb-5">Activity</h1>
+        <div class="row p-lg-5 mt-3">
+            {% for activity in activities %}
+            <div class="col-12 col-lg-3 px-lg-2">
+                <div class="card mb-4 ">
+                    <a href="{{activity.id}}" class="note-card">
+                        <img class="card-img-top" src="/media/{{activity.image}}" alt="カードの画像">
+                        <div class="card-body p-4">
+                            <h5 class="card-title">{{activity.title}}<br><span
+                                    class="small text-muted">{{activity.published_at}}</span></h5>
+                            <p class="card-text">{{activity.body |truncatechars:90 }}</p>
+                            <!-- <br> -->
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

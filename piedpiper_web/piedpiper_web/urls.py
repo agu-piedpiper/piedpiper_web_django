@@ -19,8 +19,10 @@ from django.conf.urls.static import static
 from django.urls import path,include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('cms/', include('cms.urls')),
+    path('admin/', admin.site.urls), #管理画面
+    path('cms/', include('cms.urls')), #cms
+    path('', include('website.urls')), #フロントエンド
+    path('account', include('account.urls')), #認証
 ]
 
 

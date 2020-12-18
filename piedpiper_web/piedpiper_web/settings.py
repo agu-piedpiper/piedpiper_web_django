@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cms.apps.CmsConfig',#cmsアプリケーション
+    'cms.apps.CmsConfig',  # cmsアプリケーション
+    'website.apps.WebsiteConfig',  # websiteアプリケーション
+    'account.apps.AccountConfig',
     'bootstrap4',
 ]
 
@@ -57,7 +59,7 @@ ROOT_URLCONF = 'piedpiper_web.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,9 +83,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'piedpiper',
         'USER': 'postgres',
-        'PASSWORD':'aoyama725K',
-        'HOST':'127.0.0.1',
-        'POST':'5432',
+        'PASSWORD': 'aoyama725K',
+        'HOST': '127.0.0.1',
+        'POST': '5432',
 
     }
 }
@@ -107,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+AUTH_USER_MODEL = 'account.CustomUser'
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -125,7 +127,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+STATIC_ROOT = ''
+
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = ( os.path.join('static'), )
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

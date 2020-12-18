@@ -66,9 +66,10 @@ class Image():
             image_name = f'{id}_{index}'
         
             dst_path=f'./media/images/{image_name}.{img_extension}'
+            
             Image.download_img(img_url,dst_path)
-            note_body = note_body.replace(img_url,dst_path)
-            word_len_diff += len(img_url)-len(dst_path)
+            note_body = note_body.replace(img_url,dst_path[1:])
+            word_len_diff += len(img_url)-len(dst_path[1:])
     
         return note_body
 

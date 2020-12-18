@@ -2,11 +2,11 @@ from django.urls import path
 from . import views
 app_name = 'cms'
 urlpatterns = [
-    path('activiy/', views.activiy_list, name='activiy_list'),   # 一覧
-    path('activiy/add/', views.activiy_edit, name='activiy_add'),  # 登録
-    path('activiy/note_add/', views.note_add, name='note_add'),  # 追加
-    path('activiy/mod/<int:activiy_id>/', views.activiy_edit, name='activiy_mod'),  # 修正
-    path('activiy/del/<int:activiy_id>/', views.activiy_del, name='activiy_del'),   # 削除
+    path('activity/', views.activity_list, name='activity_list'),   # 一覧
+    path('activity/add/', views.activity_edit, name='activity_add'),  # 登録
+    path('activity/note_add/', views.note_add, name='note_add'),  # 追加
+    path('activity/mod/<int:activity_id>/', views.activity_edit, name='activity_mod'),  # 修正
+    path('activity/del/<int:activity_id>/', views.activity_del, name='activity_del'),   # 削除
 
     path('techblog/', views.techblog_list, name='techblog_list'),   # 一覧
     path('techblog/add/', views.techblog_edit, name='techblog_add'),  # 登録

@@ -1,0 +1,23 @@
+{% extends "website/base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="note-conteiner">
+
+    <div class="row justify-content-center contact-body">
+        <div class="note-content col-12 col-lg-5">
+            <div class="note-title">
+                <img src="/media/{{activity.image}}" alt="">
+                <h1>{{ activity.title }}</h1>
+                <p class="text-muted">{{activity.published_at}}</p>
+            </div>
+
+            <div class="note-body">
+                {{ activity.body |safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

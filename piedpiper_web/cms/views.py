@@ -8,39 +8,39 @@ import re
 
 
 # -------------------------------Activity
-def activiy_list(request):
+def activity_list(request):
     # 記事の一覧
     # return HttpResponse('記事の一覧')
     activities = Activity.objects.all().order_by('id')
 
-    return render(request, 'cms/activiy_list.html', {'activities': activities})
+    return render(request, 'cms/activity_list.html', {'activities': activities})
 
 
-def activiy_edit(request, activiy_id=None):
+def activity_edit(request, activity_id=None):
     # 記事の編集
-    if activiy_id:   # activiy_id が指定されている (修正時)
-        activiy = get_object_or_404(Activity, pk=activiy_id)
-    else:         # activiy_id が指定されていない (追加時)
-        activiy = Activity()
+    if activity_id:   # activity_id が指定されている (修正時)
+        activity = get_object_or_404(Activity, pk=activity_id)
+    else:         # activity_id が指定されていない (追加時)
+        activity = Activity()
     if request.method == 'POST':
         # POST された request データからフォームを作成
-        form = ActivityForm(request.POST, instance=activiy)
+        form = ActivityForm(request.POST, instance=activity)
         if form.is_valid():    # フォームのバリデーション
-            activiy = form.save(commit=False)
-            activiy.image = request.FILES['image']
-            activiy.save()
-            return redirect('cms:activiy_list')
+            activity = form.save(commit=False)
+            activity.image = request.FILES['image']
+            activity.save()
+            return redirect('cms:activity_list')
     else:    # GET の時
-        form = ActivityForm(instance=activiy)  # activiy インスタンスからフォームを作成
+        form = ActivityForm(instance=activity)  # activity インスタンスからフォームを作成
 
-    return render(request, 'cms/activiy_edit.html', dict(form=form, activiy_id=activiy_id))
+    return render(request, 'cms/activity_edit.html', dict(form=form, activity_id=activity_id))
 
 
-def activiy_del(request, activiy_id):
+def activity_del(request, activity_id):
     # 記事の削除
-    activiy = get_object_or_404(Activity, pk=activiy_id)
-    activiy.delete()
-    return redirect('cms:activiy_list')
+    activity = get_object_or_404(Activity, pk=activity_id)
+    activity.delete()
+    return redirect('cms:activity_list')
 
 
 
@@ -54,19 +54,19 @@ def note_add(request):
         note_key = n["key"]
     # note_key = "ne40b6a301258"
         if note_key not in registered_note_key:
-            note_activiy = note.get_note(note_key)
-            activiy = Activity()
-            activiy.title = note_activiy['name']
-            activiy.body = Image.rewriting_img_path(
-                note_activiy['body'], note_activiy['key'])
-            activiy.note_key = note_activiy['key']
+            note_activity = note.get_note(note_key)
+            activity = Activity()
+            activity.title = note_activity['name']
+            activity.body = Image.rewriting_img_path(
+                note_activity['body'], note_activity['key'])
+            activity.note_key = note_activity['key']
 
-            activiy.image = Image.rename_eyecatch(
-                note_activiy['eyecatch'], note_activiy['key'])
-            activiy.note = 2
+            activity.image = Image.rename_eyecatch(
+                note_activity['eyecatch'], note_activity['key'])
+            activity.note = 2
 
-            activiy.save()
-    return redirect('cms:activiy_list')
+            activity.save()
+    return redirect('cms:activity_list')
 
 
 # -------------------------------techblog

@@ -5,10 +5,10 @@
 
 {% block content %}
     <h4 class="mt-4 mb-5 border-bottom">記事の編集</h4>
-    {% if activiy_id %}
-    <form action="{% url 'cms:activiy_mod' activiy_id=activiy_id %}" method="post" enctype="multipart/form-data">
+    {% if activity_id %}
+    <form action="{% url 'cms:activity_mod' activity_id=activity_id %}" method="post" enctype="multipart/form-data">
     {% else %}
-    <form action="{% url 'cms:activiy_add' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'cms:activity_add' %}" method="post" enctype="multipart/form-data">
     {% endif %}
       {% csrf_token %}
       {% bootstrap_form form layout='horizontal' %}
@@ -18,5 +18,5 @@
         </div>
       </div>
     </form>
-    <a href="{% url 'cms:activiy_list' %}" class="btn btn-secondary btn-sm">戻る</a>
+    <a href="{% url 'cms:activity_list' %}" class="btn btn-secondary btn-sm">戻る</a>
 {% endblock content %}
