@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cms.apps.CmsConfig',  # cmsアプリケーション
     'website.apps.WebsiteConfig',  # websiteアプリケーション
-    'account.apps.AccountConfig',
+    'accounts.apps.accountsConfig',
     'bootstrap4',
 ]
 
@@ -109,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'account.CustomUser'
+AUTH_USER_MODEL = 'accounts.CustomUser'
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -136,3 +136,7 @@ STATICFILES_DIRS = ( os.path.join('static'), )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# login
+LOGIN_REDIRECT_URL = 'cms:top'
+LOGOUT_REDIRECT_URL = 'accounts:login'

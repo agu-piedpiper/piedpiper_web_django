@@ -1,0 +1,11 @@
+{% extends "cms/base.html" %}
+{% load bootstrap4 %}
+
+
+{% block content %}
+    <h4>CMS_TOP</h4>
+    <p>こんにちは{{ user.username }}さん</p>
+    <a href="{% url 'cms:activity_list' %}">activity_list</a>
+    <a href="{% url 'cms:techblog_list' %}">techblog_list</a>
+
+{% endblock content %}

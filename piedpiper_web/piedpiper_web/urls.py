@@ -22,7 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls), #管理画面
     path('cms/', include('cms.urls')), #cms
     path('', include('website.urls')), #フロントエンド
-    path('account', include('account.urls')), #認証
+    # path('accounts/', include('accounts.urls')), #認証
+    path('accounts/', include(('django.contrib.auth.urls','accounts')))
 ]
 
 
