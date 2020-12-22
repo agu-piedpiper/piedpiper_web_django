@@ -1,0 +1,24 @@
+asgiref @ file:///tmp/build/80754af9/asgiref_1605055780383/work
+autopep8==1.5.4
+beautifulsoup4==4.9.3
+certifi==2020.12.5
+chardet==3.0.4
+Django @ file:///tmp/build/80754af9/django_1606860386887/work
+django-bootstrap4==2.3.1
+idna==2.10
+importlib-metadata==2.1.1
+numpy==1.19.3
+pandas==1.1.5
+Pillow==8.0.1
+psycopg2 @ file:///C:/ci/psycopg2_1594305209841/work
+pycodestyle==2.6.0
+python-dateutil==2.8.1
+pytz @ file:///tmp/build/80754af9/pytz_1606604771399/work
+requests==2.25.0
+six==1.15.0
+soupsieve==2.1
+sqlparse @ file:///tmp/build/80754af9/sqlparse_1602184451250/work
+toml==0.10.2
+urllib3==1.26.2
+wincertstore==0.2
+zipp==3.4.0

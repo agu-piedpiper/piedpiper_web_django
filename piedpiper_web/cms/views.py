@@ -53,22 +53,21 @@ def activity_del(request, activity_id):
 def note_add(request):
     note = Note()
     note_list = note.get_deta()
-    registered_note_key = Activity.objects.exclude(
-        note_key=None).values_list('note_key', flat=True)
+    registered_note_item_id = Activity.objects.exclude(
+        note_item_id=None).values_list('note_item_id', flat=True)
     for n in note_list:
-        note_key = n["key"]
-    # note_key = "ne40b6a301258"
-        if note_key not in registered_note_key:
-            note_activity = note.get_note(note_key)
+        note_item_id = n["key"]
+    # note_item_id = "ne40b6a301258"
+        if note_item_id not in registered_note_item_id:
+            note_activity = note.get_note(note_item_id)
             activity = Activity()
             activity.title = note_activity['name']
             activity.body = Image.rewriting_img_path(
-                note_activity['body'], note_activity['key'])
-            activity.note_key = note_activity['key']
+            note_activity['body'], note_activity['key'])
+            activity.note_item_id = note_item_id
 
-            activity.image = Image.rename_eyecatch(
-                note_activity['eyecatch'], note_activity['key'])
-            activity.note = 2
+            activity.image = Image.rename_eyecatch(note_activity['eyecatch'], note_activity['key'])
+            activity.is_note = True
 
             activity.save()
     return redirect('cms:activity_list')

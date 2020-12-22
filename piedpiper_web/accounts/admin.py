@@ -7,7 +7,7 @@ from .models import CustomUser,Campus,Undergraduate,Departments
  
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    fieldsets = UserAdmin.fieldsets + ((None, {'fields': ('student_number','campus','undergraduate','department','year')}),)
+    fieldsets = UserAdmin.fieldsets + ((None, {'fields': ('qiita_user_id','campus','undergraduate','department','year')}),)
     list_display = ['username', 'email', 'year']
  
  

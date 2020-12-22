@@ -32,7 +32,7 @@ class Activity(models.Model):
     published_at = models.DateTimeField("公開日",default=timezone.now)
     updated_at = models.DateTimeField("更新日",default=timezone.now)
     note = models.PositiveSmallIntegerField("Note転載",default=1, help_text="1:直接投稿, 2:note転載")
-    note_key = models.CharField("noteキー",max_length=255,null=True, blank=True)
+    note_item_id = models.CharField("noteキー",max_length=255,null=True, blank=True)
     status = models.PositiveSmallIntegerField("公開ステータス",default=1, help_text="1:下書き, 2:公開")
 
     class Meta:
@@ -52,7 +52,7 @@ class Techblog(models.Model):
     published_at = models.DateTimeField("公開日",default=timezone.now)
     updated_at = models.DateTimeField("更新日",default=timezone.now)
     note = models.PositiveSmallIntegerField("Qiita転載",default=1, help_text="1:直接投稿, 2:note転載")
-    note_key = models.CharField("Qiitaキー",max_length=255,null=True, blank=True)
+    note_item_id = models.CharField("Qiitaキー",max_length=255,null=True, blank=True)
     status = models.PositiveSmallIntegerField("公開ステータス",default=1, help_text="1:下書き, 2:公開")
 
     class Meta:

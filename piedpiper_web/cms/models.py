@@ -31,9 +31,9 @@ class Activity(models.Model):
     categories = models.ManyToManyField(Category,"カテゴリ")
     published_at = models.DateTimeField("公開日",default=timezone.now)
     updated_at = models.DateTimeField("更新日",default=timezone.now)
-    note = models.PositiveSmallIntegerField("Note転載",default=1, help_text="1:直接投稿, 2:note転載")
-    note_key = models.CharField("noteキー",max_length=255,null=True, blank=True)
-    status = models.PositiveSmallIntegerField("公開ステータス",default=1, help_text="1:下書き, 2:公開")
+    is_note = models.BooleanField("Note転載",default=False)
+    note_item_id = models.CharField("noteキー",max_length=255,null=True, blank=True)
+    status = models.BooleanField("公開ステータス",default=False)
 
     class Meta:
 
@@ -51,9 +51,10 @@ class Techblog(models.Model):
     categories = models.ManyToManyField(Techcategory,"カテゴリ")
     published_at = models.DateTimeField("公開日",default=timezone.now)
     updated_at = models.DateTimeField("更新日",default=timezone.now)
-    note = models.PositiveSmallIntegerField("Qiita転載",default=1, help_text="1:直接投稿, 2:note転載")
-    note_key = models.CharField("Qiitaキー",max_length=255,null=True, blank=True)
-    status = models.PositiveSmallIntegerField("公開ステータス",default=1, help_text="1:下書き, 2:公開")
+    is_qiita = models.BooleanField("Qiita転載",default=False)
+    qiita_item_id = models.CharField("Qiita_投稿ID",max_length=30,null=True, blank=True)
+    qiita_user_id = models.CharField("Qiita_ユーザーID",max_length=30,null=True, blank=True)
+    status = models.BooleanField("公開ステータス",default=False)
 
     class Meta:
 
