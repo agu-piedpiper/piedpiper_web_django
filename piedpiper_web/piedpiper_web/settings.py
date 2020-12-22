@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'piedpiper',
         'USER': 'postgres',
-        'PASSWORD': 'aoyama725K',
+        'PASSWORD': '####',
         'HOST': '127.0.0.1',
         'POST': '5432',
 
