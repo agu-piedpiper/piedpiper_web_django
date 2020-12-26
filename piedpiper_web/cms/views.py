@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from cms.note import Note, Image
+from cms.qiita import Qiita, Image
 from cms.models import Activity,Techblog
 from cms.forms import ActivityForm,TechblogForm
 from django.contrib.auth.decorators import login_required
@@ -106,4 +107,27 @@ def techblog_del(request, techblog_id):
     # 記事の削除
     techblog = get_object_or_404(Techblog, pk=techblog_id)
     techblog.delete()
+    return redirect('cms:techblog_list')
+
+@login_required
+def qiita_add(request):
+    qiita = Qiita()
+    qiita_list = qiita.get_deta()
+    registered_qiita_item_id = Techblog.objects.exclude(
+        qiita_item_id=None).values_list('qiita_item_id', flat=True)
+    for n in qiita_list:
+        qiita_item_id = n["id"]
+    # qiita_item_id = "8c51e2209126a8590b95"
+        if qiita_item_id not in registered_qiita_item_id:
+            qiita_techblog = qiita.get_qiita(qiita_item_id)
+            techblog = Techblog()
+            techblog.title = qiita_techblog['title']
+            techblog.body = Image.rewriting_img_path(
+            qiita_techblog['rendered_body'], qiita_techblog['id'])
+            techblog.qiita_item_id = qiita_item_id
+
+            #techblog.image = Image.rename_eyecatch(qiita_techblog['eyecatch'], qiita_techblog['id'])# API的にeyecatchを取得できない。ブログカードの仕組みはweb側に任せる
+            techblog.is_qiita = True
+
+            techblog.save()
     return redirect('cms:techblog_list')
