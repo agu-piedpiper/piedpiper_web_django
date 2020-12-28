@@ -2,17 +2,28 @@ import requests
 import json
 import pandas as pd
 import re, urllib, os
-import requests  # Webページ取得
+import requests
 import lxml.html  # スクレイピング
 
 class Qiita():
-    def get_deta(self):
+    def get_admin_followees(self):
+        # qiita記事を取得するユーザの追加
+        api_url = 'https://qiita.com/api/v2/users/'
+        qiita_admin_id = 'miura-reo'    # 管理者ユーザのID(取得対象のqiitaユーザをフォローで管理する.)
+        res = requests.get(f'{api_url}/{qiita_admin_id}/followees').content
+        li_res = json.loads(res)
+        users = []
+        for response in li_res:
+            users.append(response['id'])
+
+        return users
+
+    def get_deta(self, users):
         # 総記事の取得
-        users = ['petaexazettayotta', 'MLL', 'dddddddddd']  # 記事を取得するユーザリスト。(適当なユーザ)
-        api_url = 'https://qiita.com/api/v2/'
+        api_url = 'https://qiita.com/api/v2/users/'
         df = []
         for user in users:
-            res = requests.get(f'{api_url}users/{user}/items').content
+            res = requests.get(f'{api_url}{user}/items').content
             a = json.loads(res)
             df.extend(a)
         # 総記事数
@@ -21,8 +32,8 @@ class Qiita():
         return df
 
     def get_qiita(self, id):    #特定記事の取得(idで指定)
-        qiita_url = 'https://qiita.com/api/v2/'
-        res = requests.get(f'{qiita_url}items/{id}').content
+        api_url = 'https://qiita.com/api/v2/items/'
+        res = requests.get(f'{api_url}{id}').content
         qiita = json.loads(res)
 
         return qiita

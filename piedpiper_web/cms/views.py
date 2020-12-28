@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from cms.note import Note, Image
 from cms.qiita import Qiita, Image
-from cms.models import Activity,Techblog
-from cms.forms import ActivityForm,TechblogForm
+from cms.models import Activity, Techblog, Techblog_user
+from cms.forms import ActivityForm, TechblogForm
 from django.contrib.auth.decorators import login_required
 
 import re
@@ -76,6 +76,18 @@ def note_add(request):
 
 # -------------------------------techblog
 @login_required
+def qiita_user_add(request):
+    qiita = Qiita()
+    users = qiita.get_admin_followees()
+    for user in users:
+        #techblog = Techblog_user(qiita_user_id=user)
+        techblog_user = Techblog_user()
+        techblog_user.qiita_user_id = user
+        techblog_user.save()
+
+    return redirect('cms:techblog_list')
+
+@login_required
 def techblog_list(request):
 
     techblogs = Techblog.objects.all().order_by('id')
@@ -111,13 +123,13 @@ def techblog_del(request, techblog_id):
 
 @login_required
 def qiita_add(request):
+    users = Techblog_user.objects.all()
     qiita = Qiita()
-    qiita_list = qiita.get_deta()
+    qiita_list = qiita.get_deta(users)
     registered_qiita_item_id = Techblog.objects.exclude(
         qiita_item_id=None).values_list('qiita_item_id', flat=True)
     for n in qiita_list:
-        qiita_item_id = n["id"]
-    # qiita_item_id = "8c51e2209126a8590b95"
+        qiita_item_id = n['id']
         if qiita_item_id not in registered_qiita_item_id:
             qiita_techblog = qiita.get_qiita(qiita_item_id)
             techblog = Techblog()

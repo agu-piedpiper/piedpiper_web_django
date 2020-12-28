@@ -44,15 +44,15 @@ class Activity(models.Model):
 
 class Techblog(models.Model):
     # プログラミング
-    
+
     title = models.CharField("タイトル",max_length=255)
     body = models.TextField("本文")
     image = models.ImageField("画像",upload_to='images/',null=True, blank=True)
     categories = models.ManyToManyField(Techcategory,"カテゴリ")
     published_at = models.DateTimeField("公開日",default=timezone.now)
     updated_at = models.DateTimeField("更新日",default=timezone.now)
-    note = models.PositiveSmallIntegerField("Qiita転載",default=1, help_text="1:直接投稿, 2:note転載")
-    note_item_id = models.CharField("Qiitaキー",max_length=255,null=True, blank=True)
+    qiita = models.PositiveSmallIntegerField("Qiita転載",default=1, help_text="1:直接投稿, 2:note転載")
+    qiita_item_id = models.CharField("Qiitaキー",max_length=255,null=True, blank=True)
     status = models.PositiveSmallIntegerField("公開ステータス",default=1, help_text="1:下書き, 2:公開")
 
     class Meta:
