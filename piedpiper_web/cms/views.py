@@ -126,7 +126,7 @@ def qiita_add(request):
             qiita_techblog['rendered_body'], qiita_techblog['id'])
             techblog.qiita_item_id = qiita_item_id
 
-            techblog.image = Image.rename_eyecatch([qiita_techblog['title'], qiita_techblog['user']['name']], qiita_techblog['id'])
+            techblog.image = Image.rename_eyecatch(qiita_techblog['url'], qiita_techblog['id'])
             techblog.is_qiita = True
 
             techblog.save()

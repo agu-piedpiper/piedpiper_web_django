@@ -2,7 +2,8 @@ import requests
 import json
 import pandas as pd
 import re, urllib, os
-from PIL import Image, ImageFont, ImageDraw
+import requests  # Webページ取得
+import lxml.html  # スクレイピング
 
 class Qiita():
     def get_deta(self):
@@ -28,31 +29,6 @@ class Qiita():
 
 
 class Image():
-    def make_eyecatch(contents, dst_path, font_size=54, height=658, width=1250, font_color=(51, 51, 51), max_title_length=810, max_user_length=740):
-        img_path = 'techblog_thumbnail_background.png'
-        img = Image.open(img_path).copy()
-        title = contents[0]
-        title2 = None
-        user = '@' + contents[1]
-        font = ImageFont.truetype(font='/content/ヒラギノ角ゴシック W6.ttc', size=font_size)
-        draw = ImageDraw.Draw(img)
-        if draw.textsize(title, font=font)[0] > max_title_length:
-            title2 = title[20:40]
-            title = title[:20]
-        if draw.textsize(user, font=font)[0] > max_user_length:
-            while draw.textsize(user, font=font)[0] > max_user_length:
-                user = user[:-1]
-
-        title_w, title_h = draw.textsize(title, font=font)
-        if title2 is not None:
-            title2_w, title2_h = draw.textsize(title2, font=font)
-            draw.text(((width -title2_w)/2, 290 + title_h), title2, font_color, font=font)
-        draw.text(((width -title_w)/2, 260), title, font_color, font=font)
-
-        user_w, user_h = draw.textsize(user, font=font)
-        draw.text(((width -user_w -200), 520), user, font_color, font=font)
-
-        img.save(dst_path, "PNG")
 
     def download_img(url,dst_path):
         try:
@@ -61,23 +37,32 @@ class Image():
         except urllib.error.URLError as e:
             print(e)
 
+    def get_eyecatch(url, dst_path):
+        res = requests.get(url)
+        html = lxml.html.fromstring(res.content)    # スクレイピング
+        img_url = html.xpath('.//meta[@property="og:image"]/@content')  # OGP画像のURLを取得
+
+        return img_url[0]
+
     def get_img_position(qiita_body):
         first_find_words = 'https://qiita-user-contents.imgix.net/'
         end_find_words = '(.png|.jpg|.jpeg)'
         find_words = f'{first_find_words}.*?{end_find_words}'
-        img_positon = [m.span() for m in re.finditer(find_words, note_body)]
+        img_positon = [m.span() for m in re.finditer(find_words, qiita_body)]
         # [(2, 4), (6, 8)]
 
         return img_positon
 
-    def rewriting_img_path(qiita_body,id):
+    def rewriting_img_path(qiita_body, id):
         qiita_img_positions = Image.get_img_position(qiita_body)
         word_len_diff = 0
+        img_urls = []
         for index, qiita_img_position in enumerate(qiita_img_positions):
             first, end = qiita_img_position
-            img_url = qiita_body[first-word_len_diff:end-word_len_diff]
+            img_url = qiita_body[first-word_len_diff:end-word_len_diff+76]
+            img_urls.append(img_url)
             # img_extension=img_url[-4:]
-            img_extension = re.findall('[a-z]+$', img_url)[0]
+            img_extension = re.findall('[a-z]+$', img_url[:-76])[0]
             if img_extension == 'jpeg':
                 img_extension = 'jpg'
             image_name = f'{id}_{index}'
@@ -90,9 +75,10 @@ class Image():
 
         return qiita_body
 
-    def rename_eyecatch(eyecatch_property, qiita_id):
+    def rename_eyecatch(qiita_url, qiita_id):
         dst_path = f'./media/images/eyecatch_qiita_{qiita_id}.jpg'
-        eyecatch_img = Image.make_eyecatch(eyecatch_property, dst_path)
+        dl_img_path = Image.get_eyecatch(qiita_url, dst_path)
+        Image.download_img(dl_img_path, dst_path)
         eyecatch_img_path = dst_path[8:]
 
         return eyecatch_img_path
