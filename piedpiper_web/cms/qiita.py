@@ -45,7 +45,7 @@ class Image():
         return img_url[0]
 
     def get_img_position(qiita_body):
-        first_find_words = 'https://qiita-user-contents.imgix.net/'
+        first_find_words = 'https://qiita-image-store.'
         end_find_words = '(.png|.jpg|.jpeg)'
         find_words = f'{first_find_words}.*?{end_find_words}'
         img_positon = [m.span() for m in re.finditer(find_words, qiita_body)]
@@ -59,10 +59,9 @@ class Image():
         img_urls = []
         for index, qiita_img_position in enumerate(qiita_img_positions):
             first, end = qiita_img_position
-            img_url = qiita_body[first-word_len_diff:end-word_len_diff+76]
+            img_url = qiita_body[first-word_len_diff:end-word_len_diff]
             img_urls.append(img_url)
-            # img_extension=img_url[-4:]
-            img_extension = re.findall('[a-z]+$', img_url[:-76])[0]
+            img_extension = re.findall('[a-z]+$', img_url)[0]
             if img_extension == 'jpeg':
                 img_extension = 'jpg'
             image_name = f'{id}_{index}'
