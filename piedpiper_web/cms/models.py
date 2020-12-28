@@ -44,7 +44,7 @@ class Activity(models.Model):
 
 class Techblog(models.Model):
     # プログラミング
-    
+
     title = models.CharField("タイトル",max_length=255)
     body = models.TextField("本文")
     image = models.ImageField("画像",upload_to='images/',null=True, blank=True)
@@ -63,3 +63,11 @@ class Techblog(models.Model):
     def __str__(self):
         return self.title
 
+class Techblog_user(models.Model):
+    qiita_user_id = models.CharField("Qiita_ユーザーID",max_length=30,null=True, blank=True)
+    class Meta:
+
+        verbose_name_plural = "Techblog_user(Qiita記事投稿者)"
+
+    def __str__(self):
+        return self.qiita_user_id
