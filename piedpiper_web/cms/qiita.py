@@ -6,18 +6,6 @@ import requests
 import lxml.html  # スクレイピング
 
 class Qiita():
-    def get_admin_followees(self):
-        # qiita記事を取得するユーザの追加
-        api_url = 'https://qiita.com/api/v2/users/'
-        qiita_admin_id = 'miura-reo'    # 管理者ユーザのID(取得対象のqiitaユーザをフォローで管理する.)
-        res = requests.get(f'{api_url}/{qiita_admin_id}/followees').content
-        li_res = json.loads(res)
-        users = []
-        for response in li_res:
-            users.append(response['id'])
-
-        return users
-
     def get_deta(self, users):
         # 総記事の取得
         api_url = 'https://qiita.com/api/v2/users/'

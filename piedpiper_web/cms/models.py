@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
+from accounts.models import CustomUser
 # Create your models here.
 
 class Category(models.Model):
@@ -53,7 +53,7 @@ class Techblog(models.Model):
     updated_at = models.DateTimeField("更新日",default=timezone.now)
     is_qiita = models.BooleanField("Qiita転載",default=False)
     qiita_item_id = models.CharField("Qiita_投稿ID",max_length=30,null=True, blank=True)
-    qiita_user_id = models.CharField("Qiita_ユーザーID",max_length=30,null=True, blank=True)
+    custom_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, related_name="techblog", verbose_name="投稿ユーザID")
     status = models.BooleanField("公開ステータス",default=False)
 
     class Meta:
@@ -62,12 +62,3 @@ class Techblog(models.Model):
 
     def __str__(self):
         return self.title
-
-class Techblog_user(models.Model):
-    qiita_user_id = models.CharField("Qiita_ユーザーID",max_length=30,null=True, blank=True)
-    class Meta:
-
-        verbose_name_plural = "Techblog_user(Qiita記事投稿者)"
-
-    def __str__(self):
-        return self.qiita_user_id

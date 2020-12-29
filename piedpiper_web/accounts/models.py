@@ -26,7 +26,7 @@ class Departments(models.Model):
         return self.name
 
 class CustomUser(AbstractUser):
-    qiita_user_id=models.CharField("QiitaユーザーID",max_length=30)
+    qiita_user_id = models.CharField("Qiita_ユーザーID",max_length=30, null=True, blank=True)
     campus = models.ManyToManyField(Campus,"キャンパス")
     undergraduate = models.ManyToManyField(Undergraduate,"学部")
     department = models.ManyToManyField(Departments,"学科")

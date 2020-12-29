@@ -2,10 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from cms.note import Note, Image
 from cms.qiita import Qiita, Image
-from cms.models import Activity, Techblog, Techblog_user
+from cms.models import Activity, Techblog
 from cms.forms import ActivityForm, TechblogForm
+from accounts.models import CustomUser
 from django.contrib.auth.decorators import login_required
-
 import re
 
 @login_required
@@ -76,18 +76,6 @@ def note_add(request):
 
 # -------------------------------techblog
 @login_required
-def qiita_user_add(request):
-    qiita = Qiita()
-    users = qiita.get_admin_followees()
-    for user in users:
-        #techblog = Techblog_user(qiita_user_id=user)
-        techblog_user = Techblog_user()
-        techblog_user.qiita_user_id = user
-        techblog_user.save()
-
-    return redirect('cms:techblog_list')
-
-@login_required
 def techblog_list(request):
 
     techblogs = Techblog.objects.all().order_by('id')
@@ -123,7 +111,8 @@ def techblog_del(request, techblog_id):
 
 @login_required
 def qiita_add(request):
-    users = Techblog_user.objects.all()
+    #users = Techblog.objects.exclude(custom_user__qiita_user_id=None).values_list('custom_user__qiita_user_id', flat=True)
+    users = CustomUser.objects.exclude(qiita_user_id=None).values_list('qiita_user_id', flat=True)
     qiita = Qiita()
     qiita_list = qiita.get_deta(users)
     registered_qiita_item_id = Techblog.objects.exclude(
@@ -137,7 +126,7 @@ def qiita_add(request):
             techblog.body = Image.rewriting_img_path(
             qiita_techblog['rendered_body'], qiita_techblog['id'])
             techblog.qiita_item_id = qiita_item_id
-            techblog.qiita_user_id = qiita_techblog['user']['id']
+            techblog.custom_user__qiita_user_id = qiita_techblog['user']['id']
             techblog.image = Image.rename_eyecatch(qiita_techblog['url'], qiita_techblog['id'])
             techblog.is_qiita = True
 
