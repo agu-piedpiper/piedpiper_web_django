@@ -75,7 +75,7 @@ def note_add(request):
         note_item_id = n["key"]
     # note_item_id = "ne40b6a301258"
         if note_item_id not in registered_note_item_id:
-            note_activity =  note.get_note(note_item_id)
+            note_activity = note.get_note(note_item_id)
             activity = Activity()
             activity.title        = note_activity['name']
             activity.body         = Image.rewriting_img_path(note_activity['body'], note_activity['key'])
