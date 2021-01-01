@@ -6,6 +6,7 @@ urlpatterns = [
     path('activity/', views.activity_list, name='activity_list'),   # 一覧
     path('activity/add/', views.activity_edit, name='activity_add'),  # 登録
     path('activity/note_add/', views.note_add, name='note_add'),  # 追加
+    path('activity/update/<int:activity_id>/', views.activity_update, name='activity_update'),  # 更新
     path('activity/mod/<int:activity_id>/', views.activity_edit, name='activity_mod'),  # 修正
     path('activity/del/<int:activity_id>/', views.activity_del, name='activity_del'),   # 削除
 
