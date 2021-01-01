@@ -6,6 +6,9 @@ from cms.forms import ActivityForm,TechblogForm
 from django.contrib.auth.decorators import login_required
 
 import re
+import json
+
+
 
 @login_required
 def top(request):
@@ -58,17 +61,16 @@ def note_add(request):
     for n in note_list:
         note_item_id = n["key"]
     # note_item_id = "ne40b6a301258"
-        if note_item_id not in registered_note_item_id:
-            note_activity = note.get_note(note_item_id)
+        if note_item_id in registered_note_item_id:
+            note_activity         =  note.get_note(note_item_id)
             activity = Activity()
-            activity.title = note_activity['name']
-            activity.body = Image.rewriting_img_path(
-            note_activity['body'], note_activity['key'])
+            activity.title        = note_activity['name']
+            activity.body         = Image.rewriting_img_path(note_activity['body'], note_activity['key'])
             activity.note_item_id = note_item_id
-
-            activity.image = Image.rename_eyecatch(note_activity['eyecatch'], note_activity['key'])
-            activity.is_note = True
-
+            # activity.published_at = note_activity['published_at']
+            activity.updated_at   = note_activity['updated_at']
+            activity.image        = Image.rename_eyecatch(note_activity['eyecatch'], note_activity['key'])
+            activity.is_note      = True
             activity.save()
     return redirect('cms:activity_list')
 
