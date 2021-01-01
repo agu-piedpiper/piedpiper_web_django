@@ -6,9 +6,6 @@ from cms.forms import ActivityForm,TechblogForm
 from django.contrib.auth.decorators import login_required
 
 import re
-import json
-
-
 
 @login_required
 def top(request):
@@ -67,7 +64,7 @@ def note_add(request):
             activity.title        = note_activity['name']
             activity.body         = Image.rewriting_img_path(note_activity['body'], note_activity['key'])
             activity.note_item_id = note_item_id
-            # activity.published_at = note_activity['published_at']
+            activity.published_at = note_activity['published_at']
             activity.updated_at   = note_activity['updated_at']
             activity.image        = Image.rename_eyecatch(note_activity['eyecatch'], note_activity['key'])
             activity.is_note      = True
