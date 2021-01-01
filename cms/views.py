@@ -28,11 +28,9 @@ def activity_update(request, activity_id):
     activity = get_object_or_404(Activity, pk=activity_id)
     # Noteから取得
     note_activity =  note.get_note(activity.note_item_id)
-    print(note_activity)
     activity.title        = note_activity['name']
     activity.body         = Image.rewriting_img_path(note_activity['body'], note_activity['key'])
     activity.image        = Image.rename_eyecatch(note_activity['eyecatch'], note_activity['key'])
-    print(activity)
     activity.save()
     return redirect('cms:activity_list')
 
