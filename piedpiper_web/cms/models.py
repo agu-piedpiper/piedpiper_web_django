@@ -52,7 +52,7 @@ class Techblog(models.Model):
     published_at = models.DateTimeField("公開日",default=timezone.now)
     updated_at = models.DateTimeField("更新日",default=timezone.now)
     is_qiita = models.BooleanField("Qiita転載",default=False)
-    qiita_item_id = models.CharField("Qiita_投稿ID",max_length=30,null=True, blank=True)
+    qiita_item_id = models.CharField("Qiita_投稿ID", max_length=30, null=True, blank=True)
     custom_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, related_name="techblog", verbose_name="投稿ユーザID")
     status = models.BooleanField("公開ステータス",default=False)
 

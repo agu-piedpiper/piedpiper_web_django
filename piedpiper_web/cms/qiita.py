@@ -1,82 +1,148 @@
-import requests
 import json
-import pandas as pd
-import re, urllib, os
+import urllib
+import lxml.html
 import requests
-import lxml.html  # スクレイピング
+from accounts.models import CustomUser
+from cms.models import Techblog
+
 
 class Qiita():
-    def get_deta(self, users):
+    def get_qiita_user_ids(self):
+        """
+        全CustomUserのQiitaユーザidの取得
+        @return: Qiitaユーザidのリスト
+        @rtype: List
+        """
+        return CustomUser.objects.all().distinct('qiita_user_id').values_list('qiita_user_id', flat=True)
+
+    def get_posts(self, qiita_user_ids):
+        """
+        Qiitaユーザの記事一覧取得
+        @param qiita_user_ids: Qiitaユーザidのリスト
+        @type qiita_user_ids: list
+        @return: Qiitaの記事一覧データ
+        @rtype: list
+        """
         # 総記事の取得
         api_url = 'https://qiita.com/api/v2/users/'
-        df = []
-        for user in users:
-            res = requests.get(f'{api_url}{user}/items').content
-            a = json.loads(res)
-            df.extend(a)
-        # 総記事数
-        qiita_count = len(df)
+        result = []
+        for id in qiita_user_ids:
+            res = requests.get(f'{api_url}{id}/items').content
+            result.extend(json.loads(res))
 
-        return df
+        return result
 
-    def get_qiita(self, id):    #特定記事の取得(idで指定)
+    def get_post(self, id):
+        """
+        idの記事の取得
+        @param id: Qiita記事のid
+        @type id: str
+        @return: Qiita記事のデータ
+        @rtype: dict
+        """
         api_url = 'https://qiita.com/api/v2/items/'
         res = requests.get(f'{api_url}{id}').content
-        qiita = json.loads(res)
 
-        return qiita
+        return json.loads(res)
+    
+    def import_qiita(self, qiita_posts):
+        """
+        未登録のQiita記事をDBに登録する
+        @param qiita_posts: Qiitaの記事一覧データ
+        @type qiita_posts: list
+        """
+        # 登録済qiita記事idを取得
+        registered_qiita_item_id = Techblog.objects.exclude(
+            qiita_item_id=None).values_list('qiita_item_id', flat=True)
+        # qiita記事をDBに登録
+        for n in qiita_posts:
+            qiita_item_id = n['id']
+            if qiita_item_id not in registered_qiita_item_id:
+                post_data = self.get_post(qiita_item_id)
+                techblog = Techblog()
+                techblog.title = n['title']
+                techblog.body = self.__convert_body(post_data)
+                techblog.qiita_item_id = qiita_item_id
+                techblog.custom_user__qiita_user_id = n['user']['id']
+                techblog.image = self.__set_thumbnail(post_data)
+                techblog.is_qiita = True
+                techblog.save()
 
+    def __set_thumbnail(self, post_data):
+        """
+        Qiita記事のサムネイル画像pathの取得
+        @param post_data: Qiita記事データ
+        @type post_data: dict
+        @return: 画像のパス
+        @rtype: str
+        """
+        dst_path = f'./media/images/thumbnail_qiita_{post_data["id"]}.png'
+        dl_img_path = self.__get_thumbnail_url(post_data['url'])
+        self.__download_img(dl_img_path, dst_path)
 
-class Image():
+        return dst_path[8:]
 
-    def download_img(url,dst_path):
+    def __get_thumbnail_url(self, url):
+        """
+        Qiita記事のサムネイル画像URLの取得
+        @param url: Qiita記事のURL
+        @type url: str
+        @return: サムネイル画像のURL
+        @rtype: str
+        """
+        res = requests.get(url)
+        html = lxml.html.fromstring(res.content)    # スクレイピング
+        img_url = html.xpath('.//meta[@property="og:image"]/@content')  # OGP画像のURLを取得
+
+        return img_url[0]
+    
+    def __convert_body(self, post_data):
+        """
+        Qiita記事のHTMLをTechblog用に変換
+        @param post_data: Qiita記事データ
+        @type post_data: dict
+        @return: 画像パス変換済のQiita記事データ
+        @rtype: dict
+        """
+        rendered_body = post_data["rendered_body"]
+        html = lxml.html.fromstring(rendered_body)
+        targets = html.cssselect('img')
+        for index, target in enumerate(targets):
+            # 画像パスを取得
+            src = target.get("src").replace('&', '&amp;')
+            srcset = target.get("srcset")
+            data_canonical_src = target.get("data-canonical-src")
+            img_url = src.split('?')[0]
+            img_extension = img_url.split('.')[-1]
+            if img_extension == 'jpeg':
+                img_extension = 'jpg'
+            # 画像保存先パス
+            dst_path = f"./media/images/{post_data['id']}_{index}.{img_extension}"
+            # 画像ダウンロード
+            self.__download_img(src, dst_path)
+            # HTMLの画像パスを書き換え
+            path = dst_path[1:]
+            rendered_body = rendered_body.replace(src, path)
+            if srcset is not None:
+                rendered_body = rendered_body.replace(srcset.replace('&', '&amp;'), path + ' 1x')
+            if data_canonical_src is not None:
+                rendered_body = rendered_body.replace(data_canonical_src.replace('&', '&amp;'), path)
+        # HTMLを返却
+        return rendered_body
+
+    def __download_img(self, url, dst_path):
+        """
+        画像を保存
+        @param url: ソース画像URL
+        @type url: str
+        @param dst_path: 保存先パス
+        @type dst_path: str
+        """
         try:
             with urllib.request.urlopen(url) as web_file, open(dst_path, 'wb') as local_file:
                 local_file.write(web_file.read())
         except urllib.error.URLError as e:
             print(e)
 
-    def get_eyecatch(url, dst_path):
-        res = requests.get(url)
-        html = lxml.html.fromstring(res.content)    # スクレイピング
-        img_url = html.xpath('.//meta[@property="og:image"]/@content')  # OGP画像のURLを取得
 
-        return img_url[0]
 
-    def get_img_position(qiita_body):
-        first_find_words = 'https://qiita-image-store.'
-        end_find_words = '(.png|.jpg|.jpeg)'
-        find_words = f'{first_find_words}.*?{end_find_words}'
-        img_positon = [m.span() for m in re.finditer(find_words, qiita_body)]
-        # [(2, 4), (6, 8)]
-
-        return img_positon
-
-    def rewriting_img_path(qiita_body, id):
-        qiita_img_positions = Image.get_img_position(qiita_body)
-        word_len_diff = 0
-        img_urls = []
-        for index, qiita_img_position in enumerate(qiita_img_positions):
-            first, end = qiita_img_position
-            img_url = qiita_body[first-word_len_diff:end-word_len_diff]
-            img_urls.append(img_url)
-            img_extension = re.findall('[a-z]+$', img_url)[0]
-            if img_extension == 'jpeg':
-                img_extension = 'jpg'
-            image_name = f'{id}_{index}'
-
-            dst_path = f'./media/images/{image_name}.{img_extension}'
-
-            Image.download_img(img_url, dst_path)
-            qiita_body = qiita_body.replace(img_url, dst_path[1:])
-            word_len_diff += len(img_url) - len(dst_path[1:])
-
-        return qiita_body
-
-    def rename_eyecatch(qiita_url, qiita_id):
-        dst_path = f'./media/images/eyecatch_qiita_{qiita_id}.jpg'
-        dl_img_path = Image.get_eyecatch(qiita_url, dst_path)
-        Image.download_img(dl_img_path, dst_path)
-        eyecatch_img_path = dst_path[8:]
-
-        return eyecatch_img_path

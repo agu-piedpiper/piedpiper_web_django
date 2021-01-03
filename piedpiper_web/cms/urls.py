@@ -11,7 +11,7 @@ urlpatterns = [
 
     path('techblog/', views.techblog_list, name='techblog_list'),   # 一覧
     path('techblog/add/', views.techblog_edit, name='techblog_add'),  # 登録
-    path('techblog/qiita_add/', views.qiita_add, name='qiita_add'),  # 追加
+    path('techblog/qiita_add/', views.qiita_add, name='qiita_add'),  # Qiitaから追加
     path('techblog/mod/<int:techblog_id>/', views.techblog_edit, name='techblog_mod'),  # 修正
     path('techblog/del/<int:techblog_id>/', views.techblog_del, name='techblog_del'),   # 削除
 ]
