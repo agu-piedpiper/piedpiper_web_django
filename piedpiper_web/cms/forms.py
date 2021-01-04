@@ -1,12 +1,12 @@
 from django.forms import ModelForm
-from cms.models import Activity,Techblog
+from cms.models import Activity, Techblog
 
 
 class ActivityForm(ModelForm):
     """記事のフォーム"""
     class Meta:
         model = Activity
-        fields = ('title', 'body', 'image','categories','status' ) 
+        fields = ('title', 'body', 'image', 'categories', 'status')
 
 
 class TechblogForm(ModelForm):

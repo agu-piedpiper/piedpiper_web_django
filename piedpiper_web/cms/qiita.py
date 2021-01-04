@@ -63,7 +63,8 @@ class Qiita():
                 techblog.title = n['title']
                 techblog.body = self.__convert_body(post_data)
                 techblog.qiita_item_id = qiita_item_id
-                techblog.custom_user__qiita_user_id = n['user']['id']
+                techblog.custom_user = CustomUser.objects.get(qiita_user_id=n['user']['id'])
+                # techblog.custom_user__qiita_user_id = n['user']['id']
                 techblog.image = self.__set_thumbnail(post_data)
                 techblog.is_qiita = True
                 techblog.save()
