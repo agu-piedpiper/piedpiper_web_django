@@ -13,5 +13,4 @@ class TechblogForm(ModelForm):
     """記事のフォーム"""
     class Meta:
         model = Techblog
-        fields = ('title', 'body', 'image','categories','status' ) 
-       
+        fields = ('title', 'body', 'image', 'categories', 'status')

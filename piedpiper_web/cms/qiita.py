@@ -3,7 +3,7 @@ import urllib
 import lxml.html
 import requests
 from accounts.models import CustomUser
-from cms.models import Techblog
+from cms.models import Techblog, Techcategory
 
 
 class Qiita():
@@ -11,7 +11,7 @@ class Qiita():
         """
         全CustomUserのQiitaユーザidの取得
         @return: Qiitaユーザidのリスト
-        @rtype: List
+        @rtype: list
         """
         return CustomUser.objects.all().distinct('qiita_user_id').values_list('qiita_user_id', flat=True)
 
@@ -67,6 +67,25 @@ class Qiita():
                 techblog.image = self.__set_thumbnail(post_data)
                 techblog.is_qiita = True
                 techblog.save()
+                self.__set_categories(techblog, post_data)
+
+    def __set_categories(self, post, post_data):
+        """
+        Qiita記事のカテゴリ名の登録
+        @param post: techblogインスタンス
+        @type post: <class 'cms.models.Techblog'>
+        @param post_data: Qiita記事データ
+        @type post_data: dict
+        """
+        registered_techcategory = Techcategory.objects.exclude(name=None).values_list('name', flat=True)
+        tags = [i['name'] for i in post_data['tags']]
+        for tag in tags:
+            if tag not in registered_techcategory:
+                tag = Techcategory.objects.create(name=tag)
+            else:
+                tag = Techcategory.objects.get(name=tag)
+            post.categories.add(tag)
+        post.save()
 
     def __set_thumbnail(self, post_data):
         """
