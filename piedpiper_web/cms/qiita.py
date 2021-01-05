@@ -1,6 +1,8 @@
 import json
 import urllib
 import lxml.html
+import os
+import glob
 import requests
 from accounts.models import CustomUser
 from cms.models import Techblog, Techcategory
@@ -164,5 +166,14 @@ class Qiita():
         except urllib.error.URLError as e:
             print(e)
 
+    def delete_post_related_images(self, post_id):
+        self.__delete_thumbnail(post_id)
+        self.__delete_images_in_a_post(post_id)
 
+    def __delete_images_in_a_post(self, post_id):
+        img_paths = glob.glob(f'./media/images/{post_id}_?*.?*', recursive=True)
+        for img_path in img_paths:
+            os.remove(img_path)
 
+    def __delete_thumbnail(self, post_id):
+        os.remove(f'./media/images/thumbnail_qiita_{post_id}.png')
