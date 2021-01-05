@@ -1,12 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
 from cms.note import Note, Image
 from cms.qiita import Qiita
 from cms.models import Activity, Techblog
 from cms.forms import ActivityForm, TechblogForm
-from accounts.models import CustomUser
 from django.contrib.auth.decorators import login_required
-import re
 
 @login_required
 def top(request):
@@ -77,9 +74,7 @@ def note_add(request):
 # -------------------------------techblog
 @login_required
 def techblog_list(request):
-
     techblogs = Techblog.objects.all().order_by('id')
-
     return render(request, 'cms/techblog_list.html', {'techblogs': techblogs})
 
 @login_required
@@ -94,7 +89,10 @@ def techblog_edit(request, techblog_id=None):
         form = TechblogForm(request.POST, instance=techblog)
         if form.is_valid():    # フォームのバリデーション
             techblog = form.save(commit=False)
-            techblog.image = request.FILES['image']
+            try:
+                techblog.image = request.FILES['image']
+            except KeyError:
+                pass
             techblog.save()
             return redirect('cms:techblog_list')
     else:    # GET の時

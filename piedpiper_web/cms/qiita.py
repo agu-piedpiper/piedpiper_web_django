@@ -8,15 +8,15 @@ from accounts.models import CustomUser
 from cms.models import Techblog, Techcategory
 
 
-class Qiita():
+class Qiita:
     def get_qiita_user_ids(self):
         """
-        全CustomUserのQiitaユーザidの取得
-        @return: Qiitaユーザidのリスト
+        全CustomUserのQiitaユーザIDの取得
+        @return: QiitaユーザIDのリスト
         @rtype: list
         """
         return CustomUser.objects.all().distinct('qiita_user_id').values_list('qiita_user_id', flat=True)
-
+    
     def get_posts(self, qiita_user_ids):
         """
         Qiitaユーザの記事一覧取得
@@ -31,20 +31,20 @@ class Qiita():
         for id in qiita_user_ids:
             res = requests.get(f'{api_url}{id}/items').content
             result.extend(json.loads(res))
-
+        
         return result
-
+    
     def get_post(self, id):
         """
         idの記事の取得
-        @param id: Qiita記事のid
+        @param id: Qiita記事のID
         @type id: str
         @return: Qiita記事のデータ
         @rtype: dict
         """
         api_url = 'https://qiita.com/api/v2/items/'
         res = requests.get(f'{api_url}{id}').content
-
+        
         return json.loads(res)
     
     def import_qiita(self, qiita_posts):
@@ -71,7 +71,7 @@ class Qiita():
                 techblog.is_qiita = True
                 techblog.save()
                 self.__set_categories(techblog, post_data)
-
+    
     def __set_categories(self, post, post_data):
         """
         Qiita記事のカテゴリ名の登録
@@ -89,7 +89,7 @@ class Qiita():
                 tag = Techcategory.objects.get(name=tag)
             post.categories.add(tag)
         post.save()
-
+    
     def __set_thumbnail(self, post_data):
         """
         Qiita記事のサムネイル画像pathの取得
@@ -98,12 +98,12 @@ class Qiita():
         @return: 画像のパス
         @rtype: str
         """
-        dst_path = f'./media/images/thumbnail_qiita_{post_data["id"]}.png'
+        dst_path = f'./media/images/eyecatch_qiita_{post_data["id"]}.png'
         dl_img_path = self.__get_thumbnail_url(post_data['url'])
         self.__download_img(dl_img_path, dst_path)
-
+        
         return dst_path[8:]
-
+    
     def __get_thumbnail_url(self, url):
         """
         Qiita記事のサムネイル画像URLの取得
@@ -113,9 +113,9 @@ class Qiita():
         @rtype: str
         """
         res = requests.get(url)
-        html = lxml.html.fromstring(res.content)    # スクレイピング
+        html = lxml.html.fromstring(res.content)
         img_url = html.xpath('.//meta[@property="og:image"]/@content')  # OGP画像のURLを取得
-
+        
         return img_url[0]
     
     def __convert_body(self, post_data):
@@ -151,7 +151,7 @@ class Qiita():
                 rendered_body = rendered_body.replace(data_canonical_src.replace('&', '&amp;'), path)
         # HTMLを返却
         return rendered_body
-
+    
     def __download_img(self, url, dst_path):
         """
         画像を保存
@@ -165,15 +165,30 @@ class Qiita():
                 local_file.write(web_file.read())
         except urllib.error.URLError as e:
             print(e)
-
+    
     def delete_post_related_images(self, post_id):
+        """
+        Qiita記事に関連する画像を削除する
+        @param post_id: Qiita記事のID
+        @type post_id: str
+        """
         self.__delete_thumbnail(post_id)
         self.__delete_images_in_a_post(post_id)
-
+    
     def __delete_images_in_a_post(self, post_id):
+        """
+        Qiita記事内で表示する画像をimagesディレクトリから削除
+        @param post_id: Qiita記事のID
+        @type post_id: str
+        """
         img_paths = glob.glob(f'./media/images/{post_id}_?*.?*', recursive=True)
         for img_path in img_paths:
             os.remove(img_path)
-
+    
     def __delete_thumbnail(self, post_id):
-        os.remove(f'./media/images/thumbnail_qiita_{post_id}.png')
+        """
+        Qiita記事のサムネイル画像を削除
+        @param post_id: Qiita記事のID
+        @type post_id: str
+        """
+        os.remove(f'./media/images/eyecatch_qiita_{post_id}.png')
