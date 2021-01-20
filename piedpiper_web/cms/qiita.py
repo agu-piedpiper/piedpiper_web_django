@@ -20,17 +20,18 @@ class Qiita:
     
     def get_posts(self, qiita_user_ids):
         """
-        Qiitaユーザの記事一覧取得
+        Qiitaユーザの記事一覧取得(1ユーザあたり最大100件)
         @param qiita_user_ids: Qiitaユーザidのリスト
         @type qiita_user_ids: list
         @return: Qiitaの記事一覧データ
         @rtype: list
         """
-        # 総記事の取得
         api_url = 'https://qiita.com/api/v2/users/'
         result = []
         for id in qiita_user_ids:
-            res = requests.get(f'{api_url}{id}/items').content
+            items_count = json.loads(requests.get(f'{api_url}{id}').content)['items_count']
+            per_page = 100 if items_count >= 100 else items_count
+            res = requests.get(f'{api_url}{id}/items?per_page={per_page}').content
             result.extend(json.loads(res))
         
         return result
