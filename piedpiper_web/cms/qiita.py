@@ -131,7 +131,7 @@ class Qiita:
         targets = html.cssselect('img')
         for index, target in enumerate(targets):
             # 画像パスを取得
-            src = target.get("src").replace('&', '&amp;')
+            src = target.get("src")
             srcset = target.get("srcset")
             data_canonical_src = target.get("data-canonical-src")
             img_url = src.split('?')[0]
@@ -144,7 +144,7 @@ class Qiita:
             self.__download_img(src, dst_path)
             # HTMLの画像パスを書き換え
             path = dst_path[1:]
-            rendered_body = rendered_body.replace(src, path)
+            rendered_body = rendered_body.replace(src.replace('&', '&amp;'), path)
             if srcset is not None:
                 rendered_body = rendered_body.replace(srcset.replace('&', '&amp;'), path + ' 1x')
             if data_canonical_src is not None:
