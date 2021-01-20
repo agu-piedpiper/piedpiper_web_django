@@ -166,14 +166,15 @@ class Qiita:
         except urllib.error.URLError as e:
             print(e)
     
-    def delete_post_related_images(self, post_id):
+    def delete_post_related_images(self, post):
         """
         Qiita記事に関連する画像を削除する
-        @param post_id: Qiita記事のID
-        @type post_id: str
+        @param post: techblogインスタンス
+        @type post: <class 'cms.models.Techblog'>
         """
-        self.__delete_thumbnail(post_id)
-        self.__delete_images_in_a_post(post_id)
+        if post.image.name:
+            self.__delete_thumbnail(post.image.name)
+        self.__delete_images_in_a_post(post.qiita_item_id)
     
     def __delete_images_in_a_post(self, post_id):
         """
@@ -183,12 +184,14 @@ class Qiita:
         """
         img_paths = glob.glob(f'./media/images/{post_id}_?*.?*', recursive=True)
         for img_path in img_paths:
-            os.remove(img_path)
+            if os.path.isfile(img_path):
+                os.remove(img_path)
     
-    def __delete_thumbnail(self, post_id):
+    def __delete_thumbnail(self, eyecatch):
         """
         Qiita記事のサムネイル画像を削除
-        @param post_id: Qiita記事のID
-        @type post_id: str
+        @param eyecatch: Qiita記事のサムネイル画像のパス
+        @type eyecatch: str
         """
-        os.remove(f'./media/images/eyecatch_qiita_{post_id}.png')
+        if os.path.isfile(f'./media/{eyecatch}'):
+            os.remove(f'./media/{eyecatch}')
