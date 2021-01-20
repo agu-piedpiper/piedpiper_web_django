@@ -6,6 +6,7 @@ import glob
 import requests
 from accounts.models import CustomUser
 from cms.models import Techblog, Techcategory
+from datetime import datetime
 
 
 class Qiita:
@@ -64,6 +65,7 @@ class Qiita:
                 techblog = Techblog()
                 techblog.title = n['title']
                 techblog.body = self.__convert_body(post_data)
+                techblog.published_at = datetime.fromisoformat(n['created_at'])
                 techblog.qiita_item_id = qiita_item_id
                 techblog.custom_user = CustomUser.objects.get(qiita_user_id=n['user']['id'])
                 techblog.custom_user__qiita_user_id = n['user']['id']
