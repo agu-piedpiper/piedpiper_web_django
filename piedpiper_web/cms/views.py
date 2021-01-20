@@ -105,7 +105,7 @@ def techblog_del(request, techblog_id):
     # 記事の削除
     techblog = get_object_or_404(Techblog, pk=techblog_id)
     qiita = Qiita()
-    qiita.delete_post_related_images(techblog.qiita_item_id)
+    qiita.delete_post_related_images(techblog)
     techblog.delete()
     return redirect('cms:techblog_list')
 
