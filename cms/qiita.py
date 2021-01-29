@@ -18,7 +18,7 @@ class Qiita:
         """
         # users_id = CustomUser.objects.all().distinct('qiita_user_id').values_list('qiita_user_id', flat=True)
         users_id = CustomUser.objects.exclude(is_superuser=True).values_list('qiita_user_id', flat=True)
-        print(users_id)
+        # print(users_id)
         return users_id
     
     def get_posts(self, qiita_user_ids):
