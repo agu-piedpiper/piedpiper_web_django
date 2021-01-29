@@ -26,6 +26,7 @@
           <td>{{ activity.status }}</td>
           <td>{{ activity.note }}</td>
           <td>
+            <a href="{% url 'cms:activity_update' activity_id=activity.id %}" class="btn btn-outline-info btn-sm">更新</a>
             <a href="{% url 'cms:activity_mod' activity_id=activity.id %}" class="btn btn-outline-primary btn-sm">修正</a>
             <a href="{% url 'cms:activity_del' activity_id=activity.id %}" class="btn btn-outline-danger btn-sm">削除</a>
           </td>

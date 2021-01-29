@@ -19,6 +19,20 @@ def activity_list(request):
     return render(request, 'cms/activity_list.html', {'activities': activities})
 
 @login_required
+def activity_update(request, activity_id):
+    activity = Activity()
+    note = Note()
+    # DBから取得
+    activity = get_object_or_404(Activity, pk=activity_id)
+    # Noteから取得
+    note_activity =  note.get_note(activity.note_item_id)
+    activity.title        = note_activity['name']
+    activity.body         = Image.rewriting_img_path(note_activity['body'], note_activity['key'])
+    activity.image        = Image.rename_eyecatch(note_activity['eyecatch'], note_activity['key'])
+    activity.save()
+    return redirect('cms:activity_list')
+
+@login_required
 def activity_edit(request, activity_id=None):
     # 記事の編集
     if activity_id:   # activity_id が指定されている (修正時)
@@ -59,14 +73,11 @@ def note_add(request):
         if note_item_id not in registered_note_item_id:
             note_activity = note.get_note(note_item_id)
             activity = Activity()
-            activity.title = note_activity['name']
-            activity.body = Image.rewriting_img_path(
-            note_activity['body'], note_activity['key'])
+            activity.title        = note_activity['name']
+            activity.body         = Image.rewriting_img_path(note_activity['body'], note_activity['key'])
             activity.note_item_id = note_item_id
-
-            activity.image = Image.rename_eyecatch(note_activity['eyecatch'], note_activity['key'])
-            activity.is_note = True
-
+            activity.image        = Image.rename_eyecatch(note_activity['eyecatch'], note_activity['key'])
+            activity.is_note      = True
             activity.save()
     return redirect('cms:activity_list')
 
