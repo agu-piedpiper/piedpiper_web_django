@@ -87,10 +87,10 @@
   </div>
 </div>
 
-<!-- セクション6 -techblog
-<div id="activity" class="section_techblog ">
+<!-- セクション6 -techblog -->
+<div id="techblog" class="section_techblog ">
   <div class="section">
-    <h1 class="sub-heading">TECHBLOG</h1>
+    <h1 class="sub-heading">TECH BLOG</h1>
     <div class="note__api">
       <div class="row justify-content-center contact-body p-lg-5">
         {% for techblog in techblogs %}
@@ -99,7 +99,7 @@
             <a href="techblog/{{techblog.id}}" class="note-card">
               <img class="card-img-top " src="/media/{{techblog.image}}" alt="カードの画像">
               <div class="card-body p-4 ">
-                <h5 class="card-title">{{techblog.title}}<br><span
+                <h5 class="card-title">{{techblog.title |truncatechars:38 }}<br><span
                     class="small text-muted">{{techblog.published_at}}</span></h5>
                     
                 <p class="card-text">{{techblog.body|truncatechars:90 }}</p>
@@ -115,7 +115,7 @@
       </div>
     </div>
   </div>
-</div> -->
+</div>
 
 <!-- セクション4 -JOIN_US-->
 <div id="joinus" class="section_joinus ">

@@ -479,7 +479,7 @@ footer p {
 /*　　　Activity
 ーーーーーーーーーーーーーーーーーーーーーーーーーーーーー*/
 
-#activity {
+#activity{
     background: #159971;
     background: -webkit-linear-gradient(to left top, #009245, #00a794);
     background: linear-gradient(to left top, #009245, #00a794);
@@ -507,7 +507,15 @@ footer p {
     text-decoration: none;
     backdrop-filter: blur(3px);
 }
+/*　　Tech blog
+ーーーーーーーーーーーーーーーーーーーーーーーーーーーーー*/
+#techblog{
+    background: #3d3d3d;
+    background: -webkit-linear-gradient(to left top,#074c7a,#12ad99);
+    background: linear-gradient(to left top,#074c7a,#12ad99);
+    height: 100vh;
 
+}
 /*　　　Join Us
 ーーーーーーーーーーーーーーーーーーーーーーーーーーーーー*/
 
@@ -707,7 +715,7 @@ footer p {
         margin-top: 30px;
         margin-left: 0px;
     }
-    .section_about, .section_activity, .section_joinus, .section_contact {
+    .section_about, .section_activity, .section_techblog,.section_joinus, .section_contact {
         height: 100% !important;
     }
     .note-list, .note-content {
