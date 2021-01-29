@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'f10hl2+bh%c9j+zv#3^xl_zqv0d3mm#kaeu8*cf7-sr0=s&-hv'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -80,15 +80,11 @@ WSGI_APPLICATION = 'piedpiper_web.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'piedpiper',
-        'USER': 'postgres',
-        'PASSWORD': '####',
-        'HOST': '127.0.0.1',
-        'POST': '5432',
-
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
 
 
 # Password validation
@@ -140,3 +136,8 @@ MEDIA_URL = '/media/'
 # login
 LOGIN_REDIRECT_URL = 'cms:top'
 LOGOUT_REDIRECT_URL = 'accounts:login'
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

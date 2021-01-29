@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import re,urllib,os
 
-class Note():
+class Note:
     def get_deta(self):
         api_url = "https://note.com/api/v2/creators/piedpiper_aoyama/contents?kind=note"
         notes_url = "https://note.com/api/v1/notes/"

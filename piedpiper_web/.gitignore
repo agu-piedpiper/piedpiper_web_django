@@ -1,0 +1,4 @@
+!.gitignore
+venv/
+media/
+local_settings.py

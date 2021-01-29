@@ -16,7 +16,10 @@ class Qiita:
         @return: QiitaユーザIDのリスト
         @rtype: list
         """
-        return CustomUser.objects.all().distinct('qiita_user_id').values_list('qiita_user_id', flat=True)
+        users_id = CustomUser.objects.all().distinct('qiita_user_id').values_list('qiita_user_id', flat=True)
+        # print(users_id)
+        users_id=["kouhei25k"]
+        return users_id
     
     def get_posts(self, qiita_user_ids):
         """
@@ -68,7 +71,7 @@ class Qiita:
                 techblog.body = self.__convert_body(post_data)
                 techblog.published_at = datetime.fromisoformat(n['created_at'])
                 techblog.qiita_item_id = qiita_item_id
-                techblog.custom_user = CustomUser.objects.get(qiita_user_id=n['user']['id'])
+                techblog.custom_user = CustomUser.objects.get(qiita_user_id= n['user']['id'])
                 techblog.custom_user__qiita_user_id = n['user']['id']
                 techblog.image = self.__set_thumbnail(post_data)
                 techblog.is_qiita = True
