@@ -1,0 +1,5 @@
+test.py
+__pycache__
+media/images
+db.sqlite3
+local_settings.py
