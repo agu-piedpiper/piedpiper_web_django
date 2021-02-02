@@ -27,6 +27,7 @@ class Departments(models.Model):
 
 class CustomUser(AbstractUser):
     qiita_user_id = models.CharField("Qiita_ユーザーID", max_length=30, null=True, blank=True)
+    leave_date = models.DateField("退部日", null=True, blank=True)
     campus = models.ManyToManyField(Campus, "キャンパス")
     undergraduate = models.ManyToManyField(Undergraduate, "学部")
     department = models.ManyToManyField(Departments, "学科")
